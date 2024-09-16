@@ -56,7 +56,7 @@ public class TextToXml {
 
         beautifyXml(outputFilePath);
 
-        log.info("Xml file generated successfully");
+        log.info("Xml file generated at: {}", outputFilePath);
         log.info("Completed Txt to Xml Parsing");
     }
 

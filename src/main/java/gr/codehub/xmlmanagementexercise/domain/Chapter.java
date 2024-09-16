@@ -1,6 +1,9 @@
 package gr.codehub.xmlmanagementexercise.domain;
 
-import java.util.ArrayList;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Chapter {
-    private int chapterId;
-    private List<Paragraph> paragraphs = new ArrayList<>();
+    @XmlAttribute
+    private int id;
+    @XmlElement(name = "paragraph")
+    private List<Paragraph> paragraphs;
 }
