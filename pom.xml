@@ -11,17 +11,17 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>gr.codehub.xmlmanagementexercise.XmlManagementExercise</exec.mainClass>
     </properties>
-     <dependencies>
-	<dependency>
-		<groupId>org.projectlombok</groupId>
-		<artifactId>lombok</artifactId>
-		<version>1.18.34</version>
-		<scope>provided</scope>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
         </dependency> 
-     </dependencies>
+    </dependencies>
 </project>

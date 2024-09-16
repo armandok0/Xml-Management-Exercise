@@ -57,6 +57,7 @@ public class TextToXml {
         String line;
         boolean paragraphOpen = false;
         int lineInParagraph = 1;
+        int paragraphInChapter = 0;  // Track paragraph count for each chapter
 
         // Skip empty lines
         while ((line = reader.readLine()) != null) {
@@ -66,15 +67,18 @@ public class TextToXml {
 
             if (!paragraphOpen) {
                 // Every 20 paragraphs, start a new chapter
-                if (paragraphCount % 20 == 0 && paragraphCount != 0) {
+                if (paragraphInChapter % 20 == 0 && paragraphInChapter != 0) {
                     writer.writeEndElement();
                     chapterCount++;
                     writer.writeStartElement("chapter");
                     writer.writeAttribute("id", String.valueOf(chapterCount));
+                    paragraphInChapter = 0; // Reset paragraph count for the new chapter
                 }
-                paragraphCount++;
+
+                paragraphCount++; 
+                paragraphInChapter++; 
                 writer.writeStartElement("paragraph");
-                writer.writeAttribute("id", String.valueOf(paragraphCount));
+                writer.writeAttribute("id", String.valueOf(paragraphInChapter));  
                 paragraphOpen = true;
                 lineInParagraph = 1;
             }
