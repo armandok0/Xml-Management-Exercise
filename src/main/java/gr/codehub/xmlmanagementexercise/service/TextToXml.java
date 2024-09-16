@@ -1,6 +1,7 @@
 package gr.codehub.xmlmanagementexercise.service;
 
 import lombok.extern.slf4j.Slf4j;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
@@ -13,6 +14,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 @Slf4j
 public class TextToXml {
@@ -23,10 +31,9 @@ public class TextToXml {
     private int chapterCount = 1;
     private int wordCount = 0;
 
-    public void convertToXml(String inputFilePath, String outputFilePath, String author, String applicationClass) throws IOException, XMLStreamException {
+    public void convertToXml(String inputFilePath, String outputFilePath, String author, String applicationClass) throws IOException, XMLStreamException, TransformerConfigurationException, TransformerException {
         log.info("Starting Xml Parsing");
 
-        // Initialize file reader and XML writer
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(inputFilePath)); FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
 
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -34,7 +41,6 @@ public class TextToXml {
 
             writer.writeStartDocument("UTF-8", "1.0");
             writer.writeStartElement("book");
-
             writer.writeStartElement("chapter");
             writer.writeAttribute("id", String.valueOf(chapterCount));
 
@@ -48,9 +54,10 @@ public class TextToXml {
             writer.close();
         }
 
+        beautifyXml(outputFilePath);
+
         log.info("Xml file generated successfully");
         log.info("Completed Txt to Xml Parsing");
-
     }
 
     private void processText(BufferedReader reader, XMLStreamWriter writer) throws IOException, XMLStreamException {
@@ -72,18 +79,18 @@ public class TextToXml {
                     chapterCount++;
                     writer.writeStartElement("chapter");
                     writer.writeAttribute("id", String.valueOf(chapterCount));
-                    paragraphInChapter = 0; // Reset paragraph count for the new chapter
+                    paragraphInChapter = 0; 
                 }
 
-                paragraphCount++; 
-                paragraphInChapter++; 
+                paragraphCount++;
+                paragraphInChapter++;
                 writer.writeStartElement("paragraph");
-                writer.writeAttribute("id", String.valueOf(paragraphInChapter));  
+                writer.writeAttribute("id", String.valueOf(paragraphInChapter));
                 paragraphOpen = true;
                 lineInParagraph = 1;
             }
 
-            // Split line into sentences 
+            // Split line into sentences
             String[] sentences = line.split("(?<=[a-zA-Z0-9][.?!])\\s+(?=[A-Z])");
             for (String sentence : sentences) {
                 if (!sentence.trim().isEmpty()) {
@@ -98,7 +105,7 @@ public class TextToXml {
                 }
             }
 
-            writer.writeEndElement();
+            writer.writeEndElement(); 
             paragraphOpen = false;
         }
     }
@@ -135,7 +142,7 @@ public class TextToXml {
         writer.writeCharacters(applicationClass);
         writer.writeEndElement();
 
-        writer.writeEndElement();
+        writer.writeEndElement(); 
     }
 
     private int processWords(String sentence) {
@@ -147,5 +154,24 @@ public class TextToXml {
             }
         }
         return words.length;
+    }
+    
+    private void beautifyXml(String filePath) throws TransformerException, IOException {
+        String tempFilePath = filePath + ".tmp";
+
+        try (FileOutputStream outputStream = new FileOutputStream(tempFilePath)) {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            StreamSource source = new StreamSource(Files.newInputStream(Paths.get(filePath)));
+            StreamResult result = new StreamResult(outputStream);  
+
+            transformer.transform(source, result);
+        }
+
+        // Replace original file with the beautified one
+        Files.move(Paths.get(tempFilePath), Paths.get(filePath), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
     }
 }

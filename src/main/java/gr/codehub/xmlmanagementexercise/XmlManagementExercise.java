@@ -4,12 +4,13 @@ import gr.codehub.xmlmanagementexercise.service.TextToXml;
 import gr.codehub.xmlmanagementexercise.service.XmlValidator;
 import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class XmlManagementExercise {
 
-    public static void main(String[] args) throws IOException, XMLStreamException {
+    public static void main(String[] args) throws IOException, XMLStreamException, TransformerException {
         log.info("Starting the XML Management Exercise Application");
 
         // 1. Parser from Txt to Xml
