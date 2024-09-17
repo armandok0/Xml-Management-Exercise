@@ -23,7 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 @Slf4j
-public class TextToXml {
+public class StaxTextToXml {
 
     private Set<String> distinctWords = new HashSet<>();
     private int paragraphCount = 0;

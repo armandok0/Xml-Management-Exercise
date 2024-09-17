@@ -1,10 +1,9 @@
 package gr.codehub.xmlmanagementexercise;
 
 import gr.codehub.xmlmanagementexercise.domain.Book;
-import gr.codehub.xmlmanagementexercise.service.TextToXml;
+import gr.codehub.xmlmanagementexercise.service.StaxTextToXml;
 import gr.codehub.xmlmanagementexercise.service.XmlValidator;
 import gr.codehub.xmlmanagementexercise.service.JaxbXsdGenerator;
-import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
@@ -13,25 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class XmlManagementExercise {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws Exception {
         log.info("Starting the XML Management Exercise Application");
 
         String inputFilePath = "input_files/sample-lorem-ipsum-text-file.txt";
-        String outputFilePath = "output_files/output.xml";
+        String outputFilePath = "output_files/book.xml";
         String xsdFilePath = "output_files/book-schema.xsd";
+        String writerFilePath = "output_files/book-chapter-writer.xml";
         String author = "Armando Kostas";
         String applicationClass = XmlManagementExercise.class.getName();
 
-        TextToXml textToXmlService = new TextToXml();
-        XmlValidator xmlValidator = new XmlValidator();
-        JaxbXsdGenerator xsdGenerator = new JaxbXsdGenerator();
-
+        StaxTextToXml textToXmlService = new StaxTextToXml();
+        //SaxReadAndWriteChapters xmlChapterhandler = new SaxReadAndWriteChapters();
+        
         try {
-            // 1. Convert text to XML
+            // 1. Parser from Text to XML and Created Statistics 
             textToXmlService.convertToXml(inputFilePath, outputFilePath, author, applicationClass);
 
-            // 2. Generate XSD for the Book class
-            xsdGenerator.xsdGenerator(xsdFilePath);
+            // 2. Provide an XSD for the book XMl 
+            JaxbXsdGenerator.xsdGenerator(xsdFilePath);
 
             // 3. Validate the generated XML against the generated XSD
             boolean isValid = XmlValidator.xmlValidator(outputFilePath, xsdFilePath, Book.class);
@@ -42,6 +41,12 @@ public class XmlManagementExercise {
                 log.error("The XML file is NOT valid against the XSD schema.");
                 log.debug("End of XML validation");
             }
+
+            // 4. Reader and writer of the XML file for Chapter from 3 to 5
+            //xmlChapterhandler.processChapters(outputFilePath, writerFilePath);
+            
+            // 5. Creating XML with selected paragraphs from an existing XML
+
         } catch (IOException | XMLStreamException | TransformerException e) {
             log.error("An error occurred: {}", e.getMessage(), e);
         }
