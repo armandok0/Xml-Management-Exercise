@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class XmlValidator {
 
     public static boolean xmlValidator(String xmlFileName, String xsdFileName, Class<?> xmlClass) {
-        log.debug("Starting XML validation for {}", xmlFileName);
+        log.info("Starting XML validation for {}", xmlFileName);
         boolean isValid = false;
 
         try {

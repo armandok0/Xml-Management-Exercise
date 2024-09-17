@@ -163,7 +163,7 @@ public class StaxTextToXml {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
             StreamSource source = new StreamSource(Files.newInputStream(Paths.get(filePath)));
             StreamResult result = new StreamResult(outputStream);  
