@@ -14,10 +14,10 @@ import java.util.List;
 import javax.xml.transform.sax.SAXResult;
 
 @Slf4j
-public class SaxChapterWriter {
+public class SaxWriter {
 
-    public void writeChapters(String destinationFilePath, List<String> chapters) throws Exception {
-        log.info("Writing chapters to {}", destinationFilePath);
+    public void writeFile(String destinationFilePath, List<String> chapters) throws Exception {
+        log.info("Writing to {}", destinationFilePath);
 
         SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
         TransformerHandler handler = factory.newTransformerHandler();
@@ -48,6 +48,6 @@ public class SaxChapterWriter {
             throw e;
         }
 
-        log.info("Successfully written chapters to {}", destinationFilePath);
+        log.info("Successfully written to {}", destinationFilePath);
     }
 }
